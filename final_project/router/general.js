@@ -25,7 +25,6 @@ public_users.post("/register", (req,res) => {
   //Write your code here
   let username = req.body.username;
   let password = req.body.password;
-  console.log(req.body);
   if (!username)
     return res.status(400).json({message: "username is required" });
   if (!password)
@@ -95,3 +94,4 @@ public_users.get('/review/:isbn',function (req, res) {
  });
 
 module.exports.general = public_users;
+module.exports.findBooksByCriteria = findBooksByCriteria;
