@@ -42,40 +42,78 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  return res.status(200).json({books});
+  let promise_process =  new Promise((resolve, reject)=>{
+    resolve(books);
+  })
+  promise_process.then((successMessage)=>{
+    console.log('Finished processing get books request.');
+    return res.status(200).json({successMessage});
+  })
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
+  let promise_process  = new Promise((resolve, reject)=>{
+    let isbn = req.params.isbn;
+    let criteria = {'isbn': isbn}
+    let result = findBooksByCriteria(books, criteria);
+    if (result.length == 0)
+      resolve(false);
+    else
+      resolve(result)
+  })
   //Write your code here
-  let isbn = req.params.isbn;
-  let criteria = {'isbn': isbn}
-  let result = findBooksByCriteria(books, criteria);
-  if (result.length == 0)
-    return res.status(404).json({message: "ISBN not found."});
-  return res.status(200).json({result});
+  promise_process.then((successMessage)=>{
+    console.log("Finish processing get book by isbn");
+    if (!successMessage)
+      return res.status(404).json({message: "ISBN not found."});
+    else
+      return res.status(200).json({successMessage});
+  });
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
+  let promise_process = new Promise((resolve, reject)=>{
   //Write your code here
   let author = req.params.author;
   let criteria = {'author': author}
   let result = findBooksByCriteria(books, criteria);
   if (result.length == 0)
+      resolve(false);
+  else
+      resolve(result);
+  });
+  //Write your code here
+  promise_process.then((successMessage)=>{
+    console.log("Finish processing search by author.");
+    if(!successMessage)
     return res.status(404).json({message: "Author not found."});
-  return res.status(200).json({result});
+    else
+    return res.status(200).json({successMessage});
+  });
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
+  let promise_process = new Promise((resolve, reject)=>{
   //Write your code here
   let title = req.params.title;
   let criteria = {'title': title}
   let result = findBooksByCriteria(books, criteria);
   if (result.length == 0)
+    resolve(false);
+  else
+    resolve(result);
+  });
+
+  promise_process.then((successMessage)=>{
+  console.log("finish processing search by title")
+  if (!successMessage)
     return res.status(404).json({message: "Title not found."});
-  return res.status(200).json({result});
+  else
+    return res.status(200).json({successMessage});
+  });
 });
 
 //  Get book review
